@@ -9,6 +9,7 @@ import com.neoimperum.controller.IRestAuthenticationController;
 import com.neoimperum.controller.RestBaseController;
 import com.neoimperum.controller.RootEntity;
 import com.neoimperum.dto.AuthRequest;
+import com.neoimperum.dto.AuthRequest2;
 import com.neoimperum.dto.AuthResponse;
 import com.neoimperum.dto.DtoUser;
 import com.neoimperum.dto.RefreshTokenRequest;
@@ -25,7 +26,7 @@ public class RestAuthenticationImpl extends RestBaseController implements IRestA
 	
 	@PostMapping("/register")
 	@Override
-	public RootEntity<DtoUser> register(@Valid @RequestBody AuthRequest input) {
+	public RootEntity<DtoUser> register(@Valid @RequestBody AuthRequest2 input) {
 		// TODO Auto-generated method stub
 		return ok(authenticationService.register(input));
 	}

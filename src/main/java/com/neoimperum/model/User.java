@@ -7,8 +7,12 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.neoimperum.enums.LevelStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -35,8 +39,9 @@ public class User extends BaseEntity implements UserDetails {
 	@OneToOne
 	private Puan puan;
 	
-	@OneToMany
-	private List<UserLevel> userLevel = new ArrayList<>();
+	@Column(name = "current_level")
+	@Enumerated(EnumType.STRING)
+	private LevelStatus currentLevel;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.neoimperum.dto.AuthRequest;
+import com.neoimperum.dto.AuthRequest2;
 import com.neoimperum.dto.AuthResponse;
 import com.neoimperum.dto.DtoUser;
 import com.neoimperum.dto.RefreshTokenRequest;
@@ -54,7 +55,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService{
 	@Autowired
 	private PuanRepository puanRepository;
 	
-	private User createUser(AuthRequest input) {
+	private User createUser(AuthRequest2 input) {
 		User user = new User();
 		Energy energy = new Energy();
 		Puan puan = new Puan();
@@ -66,7 +67,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService{
 		user.setPuan(savedPuan);
 		user.setUsername(input.getUsername());
 		user.setPassword(passwordEncoder.encode(input.getPassword()));
-		UserBolum userBolum = new UserBolum();
+		user.setCurrentLevel(input.getLevelStatus());
 		return user;
 	}
 	
@@ -80,7 +81,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService{
 	}
 	
 	@Override
-	public DtoUser register(AuthRequest input) {
+	public DtoUser register(AuthRequest2 input) {
 		DtoUser dtoUser = new DtoUser();
 		User savedUser = userRepository.save(createUser(input));
 		

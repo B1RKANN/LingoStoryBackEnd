@@ -1,7 +1,7 @@
 package com.neoimperum.model;
 
 import com.neoimperum.enums.BolumPuanStatus;
-import com.neoimperum.enums.BolumType;
+import com.neoimperum.enums.StepType;
 import com.neoimperum.enums.CompletionStatus;
 
 import jakarta.persistence.Column;
@@ -22,7 +22,7 @@ public class UserBolum extends BaseEntity{
 	
 	@Column(name = "bolum_type")
 	@Enumerated(EnumType.STRING)
-	private BolumType bolumType;
+	private StepType bolumType;
 	
 	
 	@Column(name = "completion_status")

@@ -1,12 +1,14 @@
 package com.neoimperum.dto;
 
 import com.neoimperum.enums.BolumPuanStatus;
-import com.neoimperum.enums.BolumType;
+import com.neoimperum.enums.StepType;
 import com.neoimperum.enums.CompletionStatus;
 
+import lombok.Data;
+@Data
 public class DtoUserBolum extends DtoBase{
 	
-	private BolumType bolumType;
+	private StepType bolumType;
 	
 	private CompletionStatus completionStatus;
 	
