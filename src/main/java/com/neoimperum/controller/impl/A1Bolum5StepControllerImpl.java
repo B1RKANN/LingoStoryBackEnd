@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.neoimperum.controller.IA1Bolum5StepController;
 import com.neoimperum.controller.RestBaseController;
 import com.neoimperum.controller.RootEntity;
-import com.neoimperum.dto.DtoA1Bolum5Step;
 import com.neoimperum.dto.StepResponse;
+import com.neoimperum.dto.step.DtoA1Bolum5Step;
 import com.neoimperum.service.IA1Bolum5StepService;
 
 import jakarta.validation.Valid;

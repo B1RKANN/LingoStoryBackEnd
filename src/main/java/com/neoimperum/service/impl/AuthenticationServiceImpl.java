@@ -16,6 +16,8 @@ import com.neoimperum.dto.AuthRequest2;
 import com.neoimperum.dto.AuthResponse;
 import com.neoimperum.dto.DtoUser;
 import com.neoimperum.dto.RefreshTokenRequest;
+import com.neoimperum.enums.CompletionStatus;
+import com.neoimperum.enums.LevelType;
 import com.neoimperum.exception.BaseException;
 import com.neoimperum.exception.ErrorMessage;
 import com.neoimperum.exception.MessageType;
@@ -25,6 +27,8 @@ import com.neoimperum.model.Puan;
 import com.neoimperum.model.RefreshToken;
 import com.neoimperum.model.User;
 import com.neoimperum.model.UserBolum;
+import com.neoimperum.model.level.A1User;
+import com.neoimperum.repository.A1UserRepository;
 import com.neoimperum.repository.EnergyRepository;
 import com.neoimperum.repository.PuanRepository;
 import com.neoimperum.repository.RefreshTokenRepository;
@@ -55,6 +59,9 @@ public class AuthenticationServiceImpl implements IAuthenticationService{
 	@Autowired
 	private PuanRepository puanRepository;
 	
+	@Autowired
+	private A1UserRepository a1UserRepository;
+	
 	private User createUser(AuthRequest2 input) {
 		User user = new User();
 		Energy energy = new Energy();
@@ -80,11 +87,19 @@ public class AuthenticationServiceImpl implements IAuthenticationService{
 		return refreshToken;
 	}
 	
+	private void createLevel(User user) {
+		A1User a1User = new A1User();
+		a1User.setCompletionStatus(CompletionStatus.NOW);
+		a1User.setLevelType(LevelType.ONE);
+		a1User.setUser(user);
+		a1UserRepository.save(a1User);
+	}
+	
 	@Override
 	public DtoUser register(AuthRequest2 input) {
 		DtoUser dtoUser = new DtoUser();
 		User savedUser = userRepository.save(createUser(input));
-		
+		createLevel(savedUser);
 		BeanUtils.copyProperties(savedUser, dtoUser);
 		
 		return dtoUser;

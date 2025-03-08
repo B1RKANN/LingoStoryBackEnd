@@ -2,8 +2,8 @@ package com.neoimperum.controller;
 
 import java.util.List;
 
-import com.neoimperum.dto.DtoA1Bolum1Step;
 import com.neoimperum.dto.StepResponse;
+import com.neoimperum.dto.step.DtoA1Bolum1Step;
 
 public interface IA1Bolum1StepController {
 	

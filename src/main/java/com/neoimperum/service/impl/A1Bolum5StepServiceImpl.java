@@ -8,9 +8,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.neoimperum.dto.DtoA1Bolum5Step;
 import com.neoimperum.dto.DtoUser;
 import com.neoimperum.dto.StepResponse;
+import com.neoimperum.dto.step.DtoA1Bolum5Step;
 import com.neoimperum.enums.BolumPuanStatus;
 import com.neoimperum.enums.CompletionStatus;
 import com.neoimperum.enums.StepType;
@@ -18,7 +18,9 @@ import com.neoimperum.exception.BaseException;
 import com.neoimperum.exception.ErrorMessage;
 import com.neoimperum.exception.MessageType;
 import com.neoimperum.model.User;
+import com.neoimperum.model.level.A1User;
 import com.neoimperum.model.step.A1Bolum5Step;
+import com.neoimperum.repository.A1UserRepository;
 import com.neoimperum.repository.UserRepository;
 import com.neoimperum.repository.a1.bolum5.step.A1Bolum5StepRepository;
 import com.neoimperum.service.IA1Bolum5StepService;
@@ -31,6 +33,9 @@ public class A1Bolum5StepServiceImpl implements IA1Bolum5StepService {
     
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private A1UserRepository a1UserRepository;
     
     private A1Bolum5Step createStep(Long id) {
         A1Bolum5Step a1Bolum5Step = new A1Bolum5Step();
@@ -108,6 +113,9 @@ public class A1Bolum5StepServiceImpl implements IA1Bolum5StepService {
                 dtoA1Bolum5StepList.add(dtoA1Bolum5Step2);
             }
         }
+        else {
+            bolumNew(stepResponse.getUserId());
+        }
         return dtoA1Bolum5StepList;
     }
     
@@ -125,5 +133,15 @@ public class A1Bolum5StepServiceImpl implements IA1Bolum5StepService {
         StepType step = StepType.values()[stepNo];
         a1Bolum5Step.setStepType(step);
         return a1Bolum5StepRepository.save(a1Bolum5Step);
+    }
+
+    private void bolumNew(Long userId) {
+        A1User topA1User = a1UserRepository.findTopByUserIdOrderByIdDesc(userId);
+        if (topA1User == null) {
+            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, userId.toString()));
+        }
+        topA1User.setCompletionStatus(CompletionStatus.SUCCESSFUL);
+        a1UserRepository.save(topA1User);
+        // Son bölüm olduğu için yeni seviye oluşturulmayacak
     }
 }

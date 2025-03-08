@@ -1,4 +1,4 @@
-package com.neoimperum.dto;
+package com.neoimperum.dto.step;
 
 import com.neoimperum.enums.BolumPuanStatus;
 import com.neoimperum.enums.CompletionStatus;

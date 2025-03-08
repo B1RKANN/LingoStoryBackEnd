@@ -8,17 +8,20 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.neoimperum.dto.DtoA1Bolum4Step;
 import com.neoimperum.dto.DtoUser;
 import com.neoimperum.dto.StepResponse;
+import com.neoimperum.dto.step.DtoA1Bolum4Step;
 import com.neoimperum.enums.BolumPuanStatus;
 import com.neoimperum.enums.CompletionStatus;
+import com.neoimperum.enums.LevelType;
 import com.neoimperum.enums.StepType;
 import com.neoimperum.exception.BaseException;
 import com.neoimperum.exception.ErrorMessage;
 import com.neoimperum.exception.MessageType;
 import com.neoimperum.model.User;
+import com.neoimperum.model.level.A1User;
 import com.neoimperum.model.step.A1Bolum4Step;
+import com.neoimperum.repository.A1UserRepository;
 import com.neoimperum.repository.UserRepository;
 import com.neoimperum.repository.a1.bolum4.step.A1Bolum4StepRepository;
 import com.neoimperum.service.IA1Bolum4StepService;
@@ -31,6 +34,9 @@ public class A1Bolum4StepServiceImpl implements IA1Bolum4StepService {
     
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private A1UserRepository a1UserRepository;
     
     private A1Bolum4Step createStep(Long id) {
         A1Bolum4Step a1Bolum4Step = new A1Bolum4Step();
@@ -108,6 +114,9 @@ public class A1Bolum4StepServiceImpl implements IA1Bolum4StepService {
                 dtoA1Bolum4StepList.add(dtoA1Bolum4Step2);
             }
         }
+        else {
+            bolumNew(stepResponse.getUserId());
+        }
         return dtoA1Bolum4StepList;
     }
     
@@ -125,5 +134,19 @@ public class A1Bolum4StepServiceImpl implements IA1Bolum4StepService {
         StepType step = StepType.values()[stepNo];
         a1Bolum4Step.setStepType(step);
         return a1Bolum4StepRepository.save(a1Bolum4Step);
+    }
+
+    private void bolumNew(Long userId) {
+        A1User topA1User = a1UserRepository.findTopByUserIdOrderByIdDesc(userId);
+        if (topA1User == null) {
+            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, userId.toString()));
+        }
+        topA1User.setCompletionStatus(CompletionStatus.SUCCESSFUL);
+        a1UserRepository.save(topA1User);
+        A1User a1User = new A1User();
+        a1User.setUser(topA1User.getUser());
+        a1User.setCompletionStatus(CompletionStatus.NOW);
+        a1User.setLevelType(LevelType.FIVE);
+        a1UserRepository.save(a1User);
     }
 }
