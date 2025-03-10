@@ -20,6 +20,12 @@ public class SecurityConfig {
 	public static final String REGISTER = "/register";
 	public static final String AUTHENTICATE = "/authenticate";
 	public static final String REFRESH_TOKEN = "/refreshToken";
+	public static final String[] SWAGGER_PATH = {
+			"/swagger-ui/**",
+			"/v3/api-docs/**",
+			"/swagger-ui/swagger-ui.css",
+			"/swagger-ui.html"
+	};
 	
 	@Autowired
 	private AuthenticationProvider authenticationProvider;
@@ -33,19 +39,16 @@ public class SecurityConfig {
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		
 		http.csrf().disable()
-		.authorizeHttpRequests(request->
-		request.requestMatchers(REGISTER,AUTHENTICATE,REFRESH_TOKEN).permitAll()
+		.authorizeHttpRequests(request-> 
+		request.requestMatchers(AUTHENTICATE,REGISTER,REFRESH_TOKEN).permitAll()
+		.requestMatchers(SWAGGER_PATH).permitAll()
 		.anyRequest()
 		.authenticated())
 		.exceptionHandling().authenticationEntryPoint(authEntryPoint).and()
-		.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 		.authenticationProvider(authenticationProvider)
 		.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-		
-		
-		
 		return http.build();
 	}
 	
