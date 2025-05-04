@@ -1,6 +1,8 @@
 package com.neoimperum.service.impl;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,4 +57,21 @@ public class PuanServiceImpl implements IPuanService {
 		return dtoPuan;
 	}
 
+	@Override
+	public List<DtoPuan> getAllPuansByOrderDesc() {
+		List<Object[]> puanListWithUserInfo = puanRepository.findAllPuansWithUserInfoOrderByUserPuanDesc();
+		return puanListWithUserInfo.stream()
+				.map(objArray -> {
+					String username = (String) objArray[0];
+					Long userId = (Long) objArray[1];
+					Puan puan = (Puan) objArray[2];
+					
+					DtoPuan dtoPuan = new DtoPuan();
+					BeanUtils.copyProperties(puan, dtoPuan);
+					dtoPuan.setUsername(username);
+					dtoPuan.setUserId(userId);
+					return dtoPuan;
+				})
+				.collect(Collectors.toList());
+	}
 }

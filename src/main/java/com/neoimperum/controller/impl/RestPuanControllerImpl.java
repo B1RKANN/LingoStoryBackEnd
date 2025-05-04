@@ -1,6 +1,9 @@
 package com.neoimperum.controller.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,5 +31,10 @@ public class RestPuanControllerImpl extends RestBaseController implements IRestP
 	public RootEntity<DtoPuan> updatePuan(@Valid @RequestBody DtoRequestUpdatePuan dtoRequestUpdatePuan) {
 		return ok(puanService.updatePuan(dtoRequestUpdatePuan.getId(), dtoRequestUpdatePuan.getPointsToAdd()));
 	}
-
+	
+	@GetMapping("/all-sorted")
+	@Override
+	public RootEntity<List<DtoPuan>> getAllPuansByOrder() {
+		return ok(puanService.getAllPuansByOrderDesc());
+	}
 }

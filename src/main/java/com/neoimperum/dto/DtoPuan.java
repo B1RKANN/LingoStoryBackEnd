@@ -8,5 +8,7 @@ import lombok.Data;
 public class DtoPuan extends DtoBase {
 	
 	private Integer userPuan;
+	private String username;
+	private Long userId;
 	
 }
